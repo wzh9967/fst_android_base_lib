@@ -1,5 +1,8 @@
 package com.support.fst_android_base_lib;
 
+import android.os.Handler;
+import android.util.Log;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -15,6 +18,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.CountDownLatch;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -47,126 +52,203 @@ public class FstWalletTest extends TestCase {
 
     @Test
     public void testCreateWallet() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.createWallet(new WCallback() {
             @Override
             public void completion(int ret, GsonUtil data) {
                 Assert.assertEquals(ret, 0);
-                Assert.assertNotNull(data.getString("address", ""));
-                Assert.assertNotNull(data.getString("secret", ""));
-                Assert.assertNotNull(data.getString("words", ""));
+                Assert.assertNotEquals(data.getString("address", ""),"");
+                Assert.assertNotEquals(data.getString("secret", ""),"");
+                Assert.assertNotEquals(data.getString("words", ""),"");
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testIsValidAddress() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.isValidAddress(address, new WCallback() {
             @Override
             public void completion(int ret, GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertEquals(data.getString("isAddress",""),"true");
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
 
     @Test
     public void testIsValidSecret() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.isValidSecret(secret, new WCallback() {
             @Override
             public void completion(int ret, GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertEquals(data.getString("isSecret",""),"true");
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testImportSecret() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.importSecret(secret,password, new WCallback() {
             @Override
             public void completion(int ret, GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertEquals(address,data.getString("address",""));
                 Assert.assertEquals(secret,data.getString("secret",""));
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testImportWords() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.importWords(words,password, new WCallback() {
             @Override
             public void completion(int ret, GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertEquals(address,data.getString("address",""));
                 Assert.assertEquals(secret,data.getString("secret",""));
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Test
     public void testToIban() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.toIban(address, new WCallback() {
             @Override
             public void completion(int ret,GsonUtil data) {
                 Assert.assertEquals(ret, 0);
-                String iban = data.getString("iban","");
+                String iban = data.getString("Iban","");
                 Assert.assertEquals(IBAN, iban);
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testFromIban() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.fromIban(IBAN, new WCallback() {
             @Override
             public void completion(int ret ,GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String address1 = data.getString("address","");
                 Assert.assertEquals(address.toLowerCase(), address1.toLowerCase());
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testGetBalance() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getBalance(address,new WCallback() {
             @Override
             public void completion(int ret ,GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String balance = data.getString("balance","");
                 Assert.assertNotEquals(balance,"");
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testSendErc20Transaction() {
-        GsonUtil data2 = new GsonUtil("{}");
-        data2.putString("address","0x981d4bc976c221b3b42270be6dcab72d37d2e0cd");
-        data2.putString("to",address);
-        data2.putString("secret","0x1a0ad31a04ed4dbcec91a8a54c0d87187b50ab60e03139f404533332e9b31917");
-        data2.putString("value","10000000000000000000");//0.1
-        data2.putString("gasLimit","700000");
-        data2.putDouble("gasPrice",10000000000.0);
-        data2.putString("data","");
-        data2.putString("contract",contract);
-        mFstWallet.sendErc20Transaction(data2,new WCallback() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
-                Assert.assertEquals(ret, 0);
-                String hash = data.getString("hash","");
-                Assert.assertNotEquals(hash,"");
+            public void run() {
+                final CountDownLatch latch = new CountDownLatch(1);
+                GsonUtil data2 = new GsonUtil("{}");
+                data2.putString("address","0x981d4bc976c221b3b42270be6dcab72d37d2e0cd");
+                data2.putString("to",address);
+                data2.putString("secret","0x1a0ad31a04ed4dbcec91a8a54c0d87187b50ab60e03139f404533332e9b31917");
+                data2.putString("value","10000000000000000000");//0.1
+                data2.putString("gasLimit","700000");
+                data2.putDouble("gasPrice",10000000000.0);
+                data2.putString("data","");
+                data2.putString("contract",contract);
+                mFstWallet.sendErc20Transaction(data2,new WCallback() {
+                    @Override
+                    public void completion(int ret ,GsonUtil data) {
+                        Assert.assertEquals(ret, 0);
+                        String hash = data.getString("hash","");
+                        Assert.assertNotEquals(hash,"");
+                        latch.countDown();
+                    }
+                });
+                try {
+                    //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+                    latch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        });
-
+        },20000);
     }
 
     @Test
     public void testSendTransaction() {
+        final CountDownLatch latch = new CountDownLatch(1);
         GsonUtil data = new GsonUtil("{}");
         data.putString("address","0x981d4bc976c221b3b42270be6dcab72d37d2e0cd");
         data.putString("to",address);
@@ -181,56 +263,93 @@ public class FstWalletTest extends TestCase {
                 Assert.assertEquals(ret, 0);
                 String hash = data.getString("hash","");
                 Assert.assertNotEquals(hash,"");
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testGetErc20Balance(){
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getErc20Balance(contract,address,new WCallback() {
             @Override
             public void completion(int ret, GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertNotEquals(data.getString("balance",""),"");
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testGetGasPrice() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getGasPrice(new WCallback() {
             @Override
             public void completion(int ret ,GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String GasPrice = data.getString("GasPrice","");
                 Assert.assertNotEquals(GasPrice,"");
-
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testGetTransactionDetail() {
-
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getTransactionDetail(hash,new WCallback() {
             @Override
             public void completion(int ret ,GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertNotNull(data.toString());
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Test
     public void testGetTransactionReceipt() {
+        final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getTransactionReceipt(hash,new WCallback() {
             @Override
             public void completion(int ret ,GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertNotNull(data.toString());
+                latch.countDown();
             }
         });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,15 +1,14 @@
 package com.support.fst_android_base_lib;
-
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.support.fst_android_base_lib.base.WCallback;
 import com.support.fst_android_base_lib.fst.FstWallet;
 import com.support.fst_android_base_lib.util.GsonUtil;
 
-public class MainActivity extends AppCompatActivity {
+import org.junit.Assert;
+
+public class MainActivity extends Activity {
     private FstWallet mFstWallet;
     private static final String TAG = "MainActivity";
     final private static String node = "http://101.200.174.239:7545";
@@ -23,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         mFstWallet = FstWallet.getInstance();
         mFstWallet.init(this);
         mFstWallet.initStorm3Provider(node);
