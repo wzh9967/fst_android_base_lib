@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "completion: hash = "+hash);
             }
         });
-        
+
  */
     }
 
