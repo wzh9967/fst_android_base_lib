@@ -1,10 +1,7 @@
 package com.support.fst_android_base_lib;
 
-import android.os.Handler;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-
-
 
 import com.support.fst_android_base_lib.base.WCallback;
 import com.support.fst_android_base_lib.fst.FstWallet;
@@ -153,7 +150,7 @@ public class FstWalletTest extends TestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.toIban(address, new WCallback() {
             @Override
-            public void completion(int ret,GsonUtil data) {
+            public void completion(int ret, GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String iban = data.getString("Iban","");
                 Assert.assertEquals(IBAN, iban);
@@ -173,7 +170,7 @@ public class FstWalletTest extends TestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.fromIban(IBAN, new WCallback() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
+            public void completion(int ret , GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String address1 = data.getString("address","");
                 Assert.assertEquals(address.toLowerCase(), address1.toLowerCase());
@@ -193,7 +190,7 @@ public class FstWalletTest extends TestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getBalance(address,new WCallback() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
+            public void completion(int ret , GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String balance = data.getString("balance","");
                 Assert.assertNotEquals(balance,"");
@@ -222,7 +219,7 @@ public class FstWalletTest extends TestCase {
         data2.putString("contract",contract);
         mFstWallet.sendErc20Transaction(data2,new WCallback() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
+            public void completion(int ret , GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String hash = data.getString("hash","");
                 Assert.assertNotEquals(hash,"");
@@ -251,7 +248,7 @@ public class FstWalletTest extends TestCase {
         data.putString("data","");
         mFstWallet.sendTransaction(data,new WCallback() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
+            public void completion(int ret , GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String hash = data.getString("hash","");
                 Assert.assertNotEquals(hash,"");
@@ -290,7 +287,7 @@ public class FstWalletTest extends TestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getGasPrice(new WCallback() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
+            public void completion(int ret , GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 String GasPrice = data.getString("GasPrice","");
                 Assert.assertNotEquals(GasPrice,"");
@@ -310,7 +307,7 @@ public class FstWalletTest extends TestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getTransactionDetail(hash,new WCallback() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
+            public void completion(int ret , GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertNotNull(data.toString());
                 latch.countDown();
@@ -330,7 +327,7 @@ public class FstWalletTest extends TestCase {
         final CountDownLatch latch = new CountDownLatch(1);
         mFstWallet.getTransactionReceipt(hash,new WCallback() {
             @Override
-            public void completion(int ret ,GsonUtil data) {
+            public void completion(int ret , GsonUtil data) {
                 Assert.assertEquals(ret, 0);
                 Assert.assertNotNull(data.toString());
                 latch.countDown();

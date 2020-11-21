@@ -2,13 +2,13 @@ package com.support.fst_android_base_lib.fst;
 
 import android.content.Context;
 
-import com.support.fst_android_base_lib.base.WCallback;
-import com.support.fst_android_base_lib.util.GsonUtil;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
 import com.github.lzyzsd.jsbridge.CallBackFunction;
+import com.support.fst_android_base_lib.base.WCallback;
+import com.support.fst_android_base_lib.util.GsonUtil;
 
 
-public class FstWallet implements IFst{
+public class FstWallet implements IFst {
 
     private static final String MOAC_JS = "file:///android_asset/fst_storm3.html";
     private static final String TAG = "FstWallet";

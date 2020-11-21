@@ -1,7 +1,10 @@
 package com.support.fst_android_base_lib;
+
 import android.app.Activity;
 import android.os.Bundle;
+
 import com.support.fst_android_base_lib.fst.FstWallet;
+
 public class MainActivity extends Activity {
     private FstWallet mFstWallet;
     private static final String TAG = "MainActivity";
