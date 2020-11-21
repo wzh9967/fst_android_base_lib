@@ -1,10 +1,10 @@
 package com.support.fst_android_base_lib;
 
 import android.os.Handler;
-import android.util.Log;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+
 
 import com.support.fst_android_base_lib.base.WCallback;
 import com.support.fst_android_base_lib.fst.FstWallet;
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.CountDownLatch;
 
-
+//测试时 发送erc20交易和原生交易将会导致重复发送。仅一个会被确认。分开测试可以解决这个问题。
 @RunWith(AndroidJUnit4.class)
 public class FstWalletTest extends TestCase {
     final private static String node = "http://101.200.174.239:7545";
@@ -33,8 +33,6 @@ public class FstWalletTest extends TestCase {
     final private static String IBAN = "XE703KOMUB7RABL33RE06B2925QKY3B63K3";
     final private static String words = "follow horror traffic pipe ladder relief glare emotion thumb equip script tornado";
     private static GsonUtil TxData;
-
-
     private FstWallet mFstWallet;
 
     @Rule
@@ -89,8 +87,6 @@ public class FstWalletTest extends TestCase {
             e.printStackTrace();
         }
     }
-
-
 
     @Test
     public void testIsValidSecret() {
@@ -214,36 +210,32 @@ public class FstWalletTest extends TestCase {
 
     @Test
     public void testSendErc20Transaction() {
-        new Handler().postDelayed(new Runnable() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        GsonUtil data2 = new GsonUtil("{}");
+        data2.putString("address","0x981d4bc976c221b3b42270be6dcab72d37d2e0cd");
+        data2.putString("to",address);
+        data2.putString("secret","0x1a0ad31a04ed4dbcec91a8a54c0d87187b50ab60e03139f404533332e9b31917");
+        data2.putString("value","10000000000000000000");//0.1
+        data2.putString("gasLimit","700000");
+        data2.putDouble("gasPrice",10000000000.0);
+        data2.putString("data","");
+        data2.putString("contract",contract);
+        mFstWallet.sendErc20Transaction(data2,new WCallback() {
             @Override
-            public void run() {
-                final CountDownLatch latch = new CountDownLatch(1);
-                GsonUtil data2 = new GsonUtil("{}");
-                data2.putString("address","0x981d4bc976c221b3b42270be6dcab72d37d2e0cd");
-                data2.putString("to",address);
-                data2.putString("secret","0x1a0ad31a04ed4dbcec91a8a54c0d87187b50ab60e03139f404533332e9b31917");
-                data2.putString("value","10000000000000000000");//0.1
-                data2.putString("gasLimit","700000");
-                data2.putDouble("gasPrice",10000000000.0);
-                data2.putString("data","");
-                data2.putString("contract",contract);
-                mFstWallet.sendErc20Transaction(data2,new WCallback() {
-                    @Override
-                    public void completion(int ret ,GsonUtil data) {
-                        Assert.assertEquals(ret, 0);
-                        String hash = data.getString("hash","");
-                        Assert.assertNotEquals(hash,"");
-                        latch.countDown();
-                    }
-                });
-                try {
-                    //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
-                    latch.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            public void completion(int ret ,GsonUtil data) {
+                Assert.assertEquals(ret, 0);
+                String hash = data.getString("hash","");
+                Assert.assertNotEquals(hash,"");
+                latch.countDown();
             }
-        },20000);
+        });
+        try {
+            //测试方法线程会在这里暂停, 直到loadData()方法执行完毕, 才会被唤醒继续执行
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Test

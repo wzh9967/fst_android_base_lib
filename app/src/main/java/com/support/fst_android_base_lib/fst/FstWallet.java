@@ -24,6 +24,10 @@ public class FstWallet implements IFst{
         return instance;
     }
 
+    /**
+     * 初始化Storm3 节点
+     * @param node  节点
+     */
     public void initStorm3Provider(String node) {
         mWebview.callHandler("initStorm3", node, new CallBackFunction() {
             @Override
@@ -33,6 +37,12 @@ public class FstWallet implements IFst{
         });
     }
 
+    /**
+     * 初始化合约
+     * @param contract 合约地址
+     * @param address 钱包地址
+     * @param node 节点
+     */
     public void initContract(String contract,String address,String node) {
         GsonUtil params = new GsonUtil("{}");
         params.putString("node",node);
@@ -47,6 +57,10 @@ public class FstWallet implements IFst{
     }
 
 
+    /**
+     * 创建一个钱包，返回密钥，地址，助记词
+     * @param callback {"secret":"","address":"","words":""}
+     */
     @Override
     public void createWallet(WCallback callback) {
         mWebview.callHandler("createWallet", null, new CallBackFunction() {
@@ -60,6 +74,11 @@ public class FstWallet implements IFst{
         });
     }
 
+    /**
+     * 确认地址是否可用
+     * @param address 地址
+     * @param callback {"isAddress":""}
+     */
     @Override
     public void isValidAddress(String address, WCallback callback) {
         mWebview.callHandler("isValidAddress", address, new CallBackFunction() {
@@ -74,6 +93,11 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 确认密钥是否可用
+     * @param secret 密钥
+     * @param callback {"isSecret":""}
+     */
     @Override
     public void isValidSecret(String secret, WCallback callback) {
         mWebview.callHandler("isValidSecret", secret, new CallBackFunction() {
@@ -87,6 +111,12 @@ public class FstWallet implements IFst{
         });
     }
 
+    /**
+     * 导入密钥
+     * @param secret 密钥
+     * @param password 密码
+     * @param callback {"secret":"","address":""}
+     */
     @Override
     public void importSecret(String secret,String password, WCallback callback) {
         GsonUtil params = new GsonUtil("{}");
@@ -102,9 +132,14 @@ public class FstWallet implements IFst{
                 callback.completion(ret,extra);
             }
         });
-
     }
 
+    /**
+     * 导入助记词
+     * @param words 密钥
+     * @param password 密码
+     * @param callback {"secret":"","address":""}
+     */
     @Override
     public void importWords(String words,String password, WCallback callback) {
         GsonUtil params = new GsonUtil("{}");
@@ -122,6 +157,11 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 将地址转换为Iban
+     * @param address 地址
+     * @param callback {"Iban":""}
+     */
     @Override
     public void toIban(String address, WCallback callback) {
         mWebview.callHandler("toIban", address, new CallBackFunction() {
@@ -136,6 +176,11 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 将Iban转换为地址
+     * @param iban Iban地址
+     * @param callback {"address":""}
+     */
     @Override
     public void fromIban(String iban, WCallback callback) {
         mWebview.callHandler("fromIban", iban, new CallBackFunction() {
@@ -151,6 +196,11 @@ public class FstWallet implements IFst{
     }
 
 
+    /**
+     * 获取余额
+     * @param address 地址
+     * @param callback {"balance":""}
+     */
     @Override
     public void getBalance(String address, WCallback callback) {
         mWebview.callHandler("getBalance", address, new CallBackFunction() {
@@ -165,6 +215,11 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 发送erc20交易
+     * @param data {"address":"","to":"","secret":"","value":"","gasLimit":“”,"gasPrice":"","data":"","contract":""}
+     * @param callback {"hash":""}
+     */
     @Override
     public void sendErc20Transaction(GsonUtil data, WCallback callback) {
         mWebview.callHandler("sendErc20Transaction", data.toString(), new CallBackFunction() {
@@ -179,6 +234,11 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 发送erc20交易
+     * @param data {"address":"","to":"","secret":"","value":"","gasLimit":“”,"gasPrice":"","data":""}
+     * @param callback {"hash":""}
+     */
     @Override
     public void sendTransaction(GsonUtil data, WCallback callback) {
         mWebview.callHandler("sendTransaction", data.toString(), new CallBackFunction() {
@@ -193,6 +253,12 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 获取对应Erc20币的余额
+     * @param Contract Erc20地址
+     * @param address 钱包地址
+     * @param callback {"balance":""}
+     */
     @Override
     public void getErc20Balance(String Contract, String address, WCallback callback) {
         GsonUtil params = new GsonUtil("{}");
@@ -210,6 +276,10 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 获取链上的GasPrice
+     * @param callback {"GasPrice":""}
+     */
     @Override
     public void getGasPrice(WCallback callback) {
         mWebview.callHandler("getGasPrice", null, new CallBackFunction() {
@@ -224,6 +294,11 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 获取交易详情
+     * @param hash 交易hash
+     * @param callback {"data":"{}"}
+     */
     @Override
     public void getTransactionDetail(String hash, WCallback callback) {
         mWebview.callHandler("getTransactionDetail", hash, new CallBackFunction() {
@@ -239,6 +314,11 @@ public class FstWallet implements IFst{
 
     }
 
+    /**
+     * 获取交易详情
+     * @param hash 交易hash
+     * @param callback {"data":"{}"}
+     */
     @Override
     public void getTransactionReceipt(String hash, WCallback callback) {
         mWebview.callHandler("getTransactionReceipt", hash, new CallBackFunction() {
