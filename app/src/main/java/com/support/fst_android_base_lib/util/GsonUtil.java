@@ -3,8 +3,6 @@ package com.support.fst_android_base_lib.util;
 import android.os.Build;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -84,9 +82,6 @@ public class GsonUtil implements Serializable {
         arrayobj = object;
     }
 
-    public GsonUtil(Object object) {
-        this(new Gson().toJson(object));
-    }
 
     public boolean isValid() {
         return arrayobj != null || obj != null;
